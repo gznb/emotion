@@ -191,6 +191,6 @@ STATIC_URL = '/static/'
 # mongodb 的连接
 from mongoengine import connect
 
-connect(db= 'publication', alias= 'default', host= '127.0.0.1', port= 27017, username= None, password= None)
+connect(db= 'publication', alias= 'default', host= '139.9.186.222', port= 27017, username= None, password= None)
 
 

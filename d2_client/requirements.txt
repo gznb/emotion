@@ -2,3 +2,4 @@ simplejson==3.16.0
 Django==2.0.5
 mongoengine==0.18.2
 django_redis==4.10.0
+django-cors-headers==3.1.0

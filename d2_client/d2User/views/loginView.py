@@ -46,6 +46,7 @@ def Zlogin(request):
                 return JsonResponse(rev_data)
             Zusername = user['GuserUsername']
             rev_data = USERLOGINMSG[0]
+            rev_data['test'] = "enenen"
             token = tokenClass.build_token(Ztelephone)
             conn.set(token, Ztelephone, ex=OUT_TIME)
 

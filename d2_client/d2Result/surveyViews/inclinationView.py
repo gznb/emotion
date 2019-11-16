@@ -3,6 +3,9 @@ from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServer
 def Zinclination(request):
     try:
         if request.method == "POST":
+            # token  验证
+            
+
             rev_data = {
                 'code': 0,
                 'msg': '成功',

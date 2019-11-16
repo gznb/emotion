@@ -12,71 +12,68 @@ def Zmodify(request):
     '''
     try:
 
-        if request.method == "POST":
-
-            get_data = simplejson.loads(request.body)
-            
-            try:
 
 
-                Ztelephone = get_data['telephone']
+        get_data = simplejson.loads(request.body)
+        
+        try:
 
-                Zoldpassword = get_data['oldpassword']
-            except Exception as err:
-                print(err)
-                rev_data = USERMODIFY[2]
-                return JsonResponse(rev_data)
 
-            user = d2UserModel.objects(GuserTelephone=Ztelephone, GuserPassword= Zoldpassword).first()
-            if user is None:
-                rev_data = USERMODIFY[5]
-                return JsonResponse(rev_data)
-            print(Ztelephone)
-            # 判断有关信息是否需要修改
-            Znewpassword = get_data.get('newpassword')
-            # 必须要修改初始化的密码，不能和账号一样
-            if Znewpassword is None:
-                if Zoldpassword == Ztelephone:
-                    rev_data = USERMODIFY[3]
-                    return JsonResponse(rev_data)
+            Ztelephone = get_data['telephone']
 
-            if Znewpassword == Ztelephone:
+            Zoldpassword = get_data['oldpassword']
+        except Exception as err:
+            print(err)
+            rev_data = USERMODIFY[2]
+            return JsonResponse(rev_data)
+
+        user = d2UserModel.objects(GuserTelephone=Ztelephone, GuserPassword= Zoldpassword).first()
+        if user is None:
+            rev_data = USERMODIFY[5]
+            return JsonResponse(rev_data)
+        print(Ztelephone)
+        # 判断有关信息是否需要修改
+        Znewpassword = get_data.get('newpassword')
+        # 必须要修改初始化的密码，不能和账号一样
+        if Znewpassword is None:
+            if Zoldpassword == Ztelephone:
                 rev_data = USERMODIFY[3]
                 return JsonResponse(rev_data)
 
-            # 如果有输入其他信息，有则修改，没有则算了
-            if Znewpassword is not None:
-                user.GuserPassword = Znewpassword   
-            
-            Zusername = get_data.get('username')
-            if Zusername is not None:
-                user.GuserUsername = Zusername
-            
-            Zcompany = get_data.get('company')
-            if Zcompany is not None:
-                user.GuserCompany = Zcompany
+        if Znewpassword == Ztelephone:
+            rev_data = USERMODIFY[3]
+            return JsonResponse(rev_data)
 
-            Zemail = get_data.get('email')
-            if Zemail is not None:
-                user.GuserEmail = Zemail
-            
-            Zregion = get_data.get('region')
-            if Zregion is not None:
-                user.GuserRegion = Zregion
+        # 如果有输入其他信息，有则修改，没有则算了
+        if Znewpassword is not None:
+            user.GuserPassword = Znewpassword   
+        
+        Zusername = get_data.get('username')
+        if Zusername is not None:
+            user.GuserUsername = Zusername
+        
+        Zcompany = get_data.get('company')
+        if Zcompany is not None:
+            user.GuserCompany = Zcompany
 
-            try:
-                user.save()
-            except ValidationError as err:
-                rev_data = USERMODIFY[4]
-                return JsonResponse(rev_data)
-            except Exception as err:
-                print(err)
-                return HttpResponseServerError()
-            else:
-                rev_data = USERMODIFY[0]
-                return JsonResponse(rev_data)
+        Zemail = get_data.get('email')
+        if Zemail is not None:
+            user.GuserEmail = Zemail
+        
+        Zregion = get_data.get('region')
+        if Zregion is not None:
+            user.GuserRegion = Zregion
+
+        try:
+            user.save()
+        except ValidationError as err:
+            rev_data = USERMODIFY[4]
+            return JsonResponse(rev_data)
+        except Exception as err:
+            print(err)
+            return HttpResponseServerError()
         else:
-            rev_data = USERMODIFY[1]
+            rev_data = USERMODIFY[0]
             return JsonResponse(rev_data)
 
     except Exception as err:

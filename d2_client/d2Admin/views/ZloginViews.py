@@ -5,24 +5,27 @@ from django_redis import get_redis_connection
 from tools.token import Token_hander
 from configuration import OUT_TIME, ADMINLOGIN
 
+
 def Zlogin(request):
-    '''
-        注册
-    '''
+    """
+    注册
+    :param request:
+    :return:
+    """
     try:
         # 接受数据
         get_data = simplejson.loads(request.body)
 
-        Ztelephone = get_data.get('telephone')
-        Zpassword = get_data.get('password')
-        print(Ztelephone, Zpassword)
+        telephone = get_data.get('telephone')
+        password = get_data.get('password')
+        print(telephone, password)
         # 判断是否为空
-        if Ztelephone is None or Zpassword is None:
+        if telephone is None or password is None:
             rev_data = ADMINLOGIN[1]
             return JsonResponse(rev_data)
         
         # 检查账号密码
-        admin = d2AdminModel.objects(GadminTelephone=Ztelephone, GadminPassword=Zpassword).first()
+        admin = d2AdminModel.objects(GadminTelephone=telephone, GadminPassword=password).first()
         if admin is None:
             rev_data = ADMINLOGIN[1]
             return JsonResponse(rev_data)
@@ -33,15 +36,15 @@ def Zlogin(request):
         except Exception as err:
             print(err)
             return HttpResponseServerError()
-        tokenClass = Token_hander()
-        token = tokenClass.build_token(Ztelephone)
-        conn.set(token, Ztelephone, ex=OUT_TIME)
-        conn.hmset(Ztelephone, {'telephone':Ztelephone, 'username': admin['GadminUsername']})
-        conn.expire(Ztelephone, 56400)
+        token_class = Token_hander()
+        token = token_class.build_token(telephone)
+        conn.set(token, telephone, ex=OUT_TIME)
+        conn.hmset(telephone, {'telephone': telephone, 'username': admin['GadminUsername']})
+        conn.expire(telephone, 56400)
         
         rev_data = ADMINLOGIN[0]
         rev_data['data'] = {
-            'uuid': Ztelephone, 
+            'uuid': telephone,
             'name': admin['GadminUsername'], 
             'token': token
         }

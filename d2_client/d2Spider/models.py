@@ -2,7 +2,7 @@ from django.db import models
 import mongoengine
 # Create your models here.
 
-class d2SpiderModle(mongoengine.DynamicDocument):
+class d2SpiderModel(mongoengine.DynamicDocument):
     '''
     爬虫类
     '''
@@ -12,4 +12,4 @@ class d2SpiderModle(mongoengine.DynamicDocument):
     GspiderClassification = mongoengine.StringField()   # 分类
     GspiderDomain = mongoengine.StringField(unique=True)           # 域名
     
-    GSpiderdeleted = mongoengine.IntField(default=0)          # 伪删除
+    GspiderDeleted = mongoengine.IntField(default=0)          # 伪删除

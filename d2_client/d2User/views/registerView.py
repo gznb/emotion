@@ -1,16 +1,14 @@
 import datetime
 import simplejson
 from d2User.models import d2UserModel
-from mongoengine.errors import  ValidationError, NotUniqueError
-from django.http import JsonResponse, HttpResponseNotFound, HttpResponseServerError
+from mongoengine.errors import ValidationError, NotUniqueError
+from django.http import JsonResponse, HttpResponseServerError
 from configuration import USERREGISTER, TRIALDURATION, INITIALLEVEL, EXTENSIONOFTIME, OUT_TIME
-from tools.examine import examineTelephone, examineUsername, examineEmail
 from tools.token import Token_hander
 from django_redis import get_redis_connection
 
 def Zregister(request):
     try:
-
         get_data = simplejson.loads(request.body)
         Zusername = get_data.get('username')
         Zcompany = get_data.get('company')
@@ -24,25 +22,6 @@ def Zregister(request):
             rev_data = USERREGISTER[1]
             return JsonResponse(rev_data)
 
-        # 一大波的检查
-        rev_data = USERREGISTER[4]
-        tp, msg = examineTelephone(Ztelephone)
-        if tp == 0:
-            rev_data['msg'] = msg
-
-        if tp == 1:
-            tp, msg = examineEmail(Zemail)
-            if tp == 0:
-                
-                rev_data['msg'] = msg
-        if tp == 1:
-            tp, msg = examineUsername(Zusername)
-            if tp == 0:
-                rev_data['msg'] = msg
-        
-        if tp == 0:
-            return JsonResponse(rev_data)
-
 
         # 没有被注册， 开始注册，初始化有关字段，密码为电话号码
         newUser = d2UserModel(
@@ -53,7 +32,9 @@ def Zregister(request):
             GuserEmail= Zemail,
             GuserRegion= Zregion,
             GuserPosition= INITIALLEVEL,
-            GuserPurchaseDate= datetime.date.today(),
+            GuserPurchaseDate= datetime.datetime.now(),
+            GuserRegistrationDate = datetime.datetime.now(),
+            GuserLastLogin = datetime.datetime.now(),
             GuserAvailableTime= TRIALDURATION,
             GuserExtendedDate= EXTENSIONOFTIME,
         )

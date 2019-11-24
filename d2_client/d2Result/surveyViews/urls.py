@@ -7,5 +7,5 @@ urlpatterns = [
     path('inclination/', inclinationView.Zinclination),
     path('source_distribution/', sourceDistributionView.ZsourceDistribution),
     path('specific/', specificView.Zspecific),
-    path('trend/', trendView.Ztrend),
+    path('trend/', trendView.trend),
 ]

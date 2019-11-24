@@ -1,7 +1,7 @@
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
 import simplejson
 from django_redis import get_redis_connection
-from d2Spider.models import d2SpiderModle
+from d2Spider.models import d2SpiderModel
 from configuration import OUT_TIME
 from mongoengine.errors import NotUniqueError
 def ZupdateSpider(request):
@@ -45,7 +45,7 @@ def ZupdateSpider(request):
                 rev_data = {'code':1, 'msg': "缺少关键信息", 'data':{}}
                 return JsonResponse(rev_data)
 
-        updateSpider = d2SpiderModle.objects(GspiderId=ZspiderId).first()
+        updateSpider = d2SpiderModel.objects(GspiderId=ZspiderId).first()
 
         if updateSpider is None:
             rev_data = {'code': 1, 'msg': "更新失败", 'data': "改词不存在，或者已经被删除"}

@@ -1,7 +1,7 @@
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
 import simplejson
 from django_redis import get_redis_connection
-from d2Spider.models import d2SpiderModle
+from d2Spider.models import d2SpiderModel
 
 def ZdeleteSpider(request):
     
@@ -25,8 +25,8 @@ def ZdeleteSpider(request):
             return JsonResponse(rev_data)
 
         ZspiderId = get_data.get('number')
-        deleteSpider = d2SpiderModle.objects(GspiderId=ZspiderId).first()
-        deleteSpider['GSpiderdeleted'] = 1
+        deleteSpider = d2SpiderModel.objects(GspiderId=ZspiderId).first()
+        deleteSpider['GspiderDeleted'] = 1
         try:
             deleteSpider.save()
         except Exception as err:

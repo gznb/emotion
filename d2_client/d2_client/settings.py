@@ -11,7 +11,12 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-
+# mongodb 的连接
+from mongoengine import connect
+#  log  首先创建日志存储路径.
+import logging
+import django.utils.log
+import logging.handlers
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -37,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework_mongoengine',
     'd2User',
     'd2Emotional',
     'd2Spider',
@@ -54,7 +61,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'middleware.IsJsonCheck.ZisJsonCheck',
+    'middleware.IsJsonCheck.ZisJsonCheckMiddleware',
+    'middleware.authToken.ZauthTokenMiddleware',
 ]
 # 跨域问题
 CORS_ALLOW_CREDENTIALS = True
@@ -108,7 +116,97 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'd2_client.wsgi.application'
 
+log_path = os.path.join(BASE_DIR, "logs")
+if not os.path.exists(log_path):
+    os.makedirs("logs")
+DJANGO_LOG_LEVEL = DEBUG
 
+LOGGING = {
+    'version': 1,  # 保留字
+    'disable_existing_loggers': False,  # 禁用已经存在的logger实例
+    # 日志文件的格式
+    'formatters': {
+        # 详细的日志格式
+        'standard': {
+            'format': '[%(asctime)s][%(threadName)s:%(thread)d][task_id:%(name)s][%(filename)s:%(lineno)d]'
+                      '[%(levelname)s][%(message)s]'
+        },
+        # 简单的日志格式
+        'simple': {
+            'format': '[%(levelname)s][%(asctime)s][%(filename)s:%(lineno)d]%(message)s'
+        },
+        # 定义一个特殊的日志格式
+        'collect': {
+            'format': '%(message)s'
+        }
+    },
+    # 过滤器
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    # 处理器
+    'handlers': {
+        'console': {  # 在终端打印
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],  # 只有在Django debug为True时才在屏幕打印日志
+            'class': 'logging.StreamHandler',  #
+            'formatter': 'simple'
+        },
+        'default': {  # 默认的
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',  # 保存到文件，自动切
+            'filename': os.path.join(BASE_DIR + '/logs/', "all.log"),  # 日志文件
+            'maxBytes': 1024 * 1024 * 50,  # 日志大小 50M
+            'backupCount': 3,  # 最多备份几个
+            'formatter': 'standard',
+            'encoding': 'utf-8',
+        },
+        'error': {  # 专门用来记错误日志
+            'level': 'ERROR',
+            'class': 'logging.handlers.RotatingFileHandler',  # 保存到文件，自动切
+            'filename': os.path.join(BASE_DIR + '/logs/', "error.log"),  # 日志文件
+            'maxBytes': 1024 * 1024 * 50,  # 日志大小 50M
+            'backupCount': 5,
+            'formatter': 'standard',
+            'encoding': 'utf-8',
+        },
+        'collect': {  # 专门定义一个收集特定信息的日志
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',  # 保存到文件，自动切
+            'filename': os.path.join(BASE_DIR + '/logs/', "collect.log"),
+            'maxBytes': 1024 * 1024 * 50,  # 日志大小 50M
+            'backupCount': 5,
+            'formatter': 'collect',
+            'encoding': "utf-8"
+        },
+        'scprits_handler': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR + '/logs/', "script.log"),
+            'maxBytes': 1024 * 1024 * 5,
+            'backupCount': 5,
+            'formatter': 'standard',
+        }
+    },
+    'loggers': {
+        'django': {  # 默认的logger应用如下配置
+            'handlers': ['default', 'console', 'error'],  # 上线之后可以把'console'移除
+            'level': 'ERROR',
+            'propagate': True,  # 向不向更高级别的logger传递
+        },
+        'collect': {  # 名为 'collect'的logger还单独处理
+            'handlers': ['console', 'collect'],
+            'level': 'INFO',
+        },
+        'scripts': {
+            'handlers': ['scprits_handler'],
+            'level': 'INFO',
+            'propagate': False
+        },
+    },
+}
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
@@ -187,11 +285,14 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
+try:
+    connect(db='publication', alias='default', host='139.9.186.222', port=27017, username='gznb', password='qwer1234')
+except Exception as err:
+    logging.error(err)
 
-
-# mongodb 的连接
-from mongoengine import connect
-
-connect(db= 'publication', alias= 'default', host= '139.9.186.222', port= 27017, username= 'gznb', password= 'qwer1234')
-
-
+NOT_AUTH_URL = [
+    '/user/login/',
+    '/user/register/',
+    '/user/modify/',
+    '/admin/login/'
+]

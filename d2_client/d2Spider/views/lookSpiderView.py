@@ -1,7 +1,7 @@
 from django_redis import get_redis_connection
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
 import simplejson
-from d2Spider.models import d2SpiderModle
+from d2Spider.models import d2SpiderModel
 import pprint
 from configuration import OUT_TIME
 
@@ -32,7 +32,7 @@ def ZlookSpider(request):
             rev_data = {'code':1, 'msg': "关键信息不存在", 'data':{}}
             return JsonResponse(rev_data)
         spider_list = []
-        res = d2SpiderModle.objects(GSpiderdeleted=0)
+        res = d2SpiderModel.objects(GspiderDeleted=0)
         total = res.count()
         for obj in res.skip((currentPage-1)*pageSize).limit(pageSize):
             spider_list.append({

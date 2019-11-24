@@ -1,7 +1,7 @@
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
 import simplejson
 from django_redis import get_redis_connection
-from d2Spider.models import d2SpiderModle
+from d2Spider.models import d2SpiderModel
 from configuration import OUT_TIME
 
 def ZaddSpider(request):
@@ -46,19 +46,19 @@ def ZaddSpider(request):
                 return JsonResponse(rev_data)
         # 查看是否重复
 
-        temp = d2SpiderModle.objects(GspiderDomain=ZspiderDomain).first()
+        temp = d2SpiderModel.objects(GspiderDomain=ZspiderDomain).first()
         
 
-        if temp is not None and temp['GSpiderdeleted'] == 0:
+        if temp is not None and temp['GspiderDeleted'] == 0:
             rev_data = {'code': 1, 'msg': "此网站已经存在", "data":{}}
             return JsonResponse(rev_data)
 
-        if temp is not None and temp['GSpiderdeleted'] == 1:
-            temp['GSpiderdeleted'] = 0
+        if temp is not None and temp['GspiderDeleted'] == 1:
+            temp['GspiderDeleted'] = 0
 
         
-        newSpider = d2SpiderModle(
-            GspiderId = d2SpiderModle.objects.count(),
+        newSpider = d2SpiderModel(
+            GspiderId = d2SpiderModel.objects.count(),
             GspiderName = ZspiderName,
             GspiderClassification = ZspiderClassification,
             GspiderRegion = ZspiderRegion,

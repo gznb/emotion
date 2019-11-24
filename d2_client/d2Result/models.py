@@ -3,8 +3,6 @@ import mongoengine
 # Create your models here.
 
 class d2ResultModel(mongoengine.DynamicDocument):
-    '''
-    '''
     GresultKeyword = mongoengine.StringField()                        # 搜索关键词
     GresultRealUrl = mongoengine.URLField()                           # 网页url
     GresultTitle = mongoengine.StringField()                          # 网页title

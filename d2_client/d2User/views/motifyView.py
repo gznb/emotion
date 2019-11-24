@@ -6,14 +6,12 @@ from tools.token import Token_hander
 from django_redis import get_redis_connection
 from mongoengine.errors import ValidationError
 
+
 def Zmodify(request):
     '''
     需要得到密码，原来的密码，现在的密码，然后知道一些其他的资料
     '''
     try:
-
-
-
         get_data = simplejson.loads(request.body)
         
         try:

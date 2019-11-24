@@ -9,7 +9,6 @@ class Token_hander():
     def __init__(self):
         self.out_time = OUT_TIME
 
-
     def build_token(self, message):
         """
         hax_message: 待加密字符串内容  格式： '当前时间戳：message：过期时间戳'
@@ -37,9 +36,11 @@ class Token_hander():
             if len(token_list) != 2:
                 return False
             ts_str = token_list[0]
-            if float(ts_str) < time.time():
-                # token expired
-                return False
+
+            # 关于时间的检验，暂时关闭
+            # if float(ts_str) < time.time():
+            #     # token expired
+            #     return False
             known_sha1_tsstr = token_list[1]
             sha1 = hmac.new(key.encode("utf-8"),ts_str.encode('utf-8'),'sha1')
             calc_sha1_tsstr = sha1.hexdigest()
@@ -50,4 +51,3 @@ class Token_hander():
             return True
         except Exception as e:
             return False
-    

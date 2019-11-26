@@ -53,7 +53,7 @@ def update_word(request):
         try:
             update_this_word.save()
         except Exception as err:
-            print(err)
+            # print(err)
             return HttpResponseServerError
         else:
             rev_data = {'code': 0, 'msg': "更新成功", 'data': {}}

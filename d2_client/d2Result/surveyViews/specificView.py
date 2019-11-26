@@ -1,40 +1,39 @@
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
+from rest_framework.views import APIView
+from d2Result.surveyViews.utils.check_and_aggregate import CheckAndAggregate
+from d2Result.models import d2ResultModel
+import datetime
+from conf.time_conf import DATETIME_FORMAT_STR
+from pymongo_aggregate.aggregate_rule import AggregateRule
+import logging
+logger = logging.getLogger('django')
 
-def Zspecific(request):
-    try:
+class SpecificView(APIView):
 
-        rev_data = {
-            'code': 0,
-            'msg': "成功",
-            'data': {
-                'count': 3,  # 最多显示10页
-                'list': [
-                    {
-                        'time': "2019-11-8 14:50",
-                        'title': "XXXXXXXXXX",
-                        'url': "www.XXXXXX.com",
-                        'score': 0.5,
-                        'source': '搜索引擎'
-                    },
-                    {
-                        'time': "2019-11-8 15:50",
-                        'title': "XXXXXXXXXX",
-                        'url': "www.XXXXXX.com",
-                        'score': 0.5,         # 重要程度排序，越小越靠前
-                        'source': '贴吧'
-                    },
-                    {
-                        'time': "2019-11-8 16:50",
-                        'title': "XXXXXXXXXX",
-                        'url': "www.XXXXXX.com",
-                        'score': 0.5,
-                        'source': '论坛'
-                    }
-                ]
-            }
-        }
-        return JsonResponse(rev_data)
+    def post(self, request, *args, **kwargs):
 
-    except Exception as err:
-        print(err)
-        return HttpResponseServerError()
+        check_and_aggregate = CheckAndAggregate()
+        rules = AggregateRule()
+        get_data = check_and_aggregate.check_format(request)
+        if isinstance(get_data, (JsonResponse, HttpResponseServerError)):
+            return get_data
+        else:
+            base_aggreate = check_and_aggregate.init_aggregate_rules(get_data)
+            if get_data['data']['source']['isAll'] == 1:
+                base_aggreate.append(rules.look_up_role('d2_spider_model', 'GspiderId', 'GspiderId', 'spider'))
+            base_aggreate.append(rules.equal_rule('GresultAttribute', '负面'))
+            # print(base_aggreate)
+            base_res_list = d2ResultModel._get_collection().aggregate(base_aggreate)
+
+            con_list = list()
+            for res in base_res_list:
+                d = {
+                    'time': res['GresultReleaseTime'].strftime(DATETIME_FORMAT_STR),
+                    'title': res['GresultTitle'].strip(),
+                    'url': res['GresultRealUrl'],
+                    'score': res['GresultScore'],
+                    'source': res['spider'][0]['GspiderClassification']
+                }
+                con_list.append(d)
+
+            return JsonResponse({'code': 0, 'msg': '成功', 'data': {'count':len(con_list), 'list': con_list}})

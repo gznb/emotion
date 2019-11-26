@@ -1,56 +1,63 @@
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
+from rest_framework.views import APIView
+from d2Result.surveyViews.utils.check_and_aggregate import CheckAndAggregate
+from d2Result.models import d2ResultModel
+import copy
+from pymongo_aggregate.aggregate_rule import AggregateRule
+import logging
+logger = logging.getLogger('django')
 
-def Zchannel(request):
-    try:
 
-        rev_data = {
-            'code': 0,
-            'msg': '成功',
-            'data': {
-                'channel': {
-                    'count': 5,
-                    'list': [
-                        {
-                            'name': '百度搜索',
-                            'total': 20,
-                            'positive': 2,
-                            'negative': 10,
-                            'neutral': 8,
-                        },
-                        {
-                            'name': '360搜索',
-                            'total': 30,
-                            'positive': 2,
-                            'negative': 10,
-                            'neutral': 18,
-                        },
-                        {
-                            'name': '搜狗搜索',
-                            'total': 40,
-                            'positive': 2,
-                            'negative': 10,
-                            'neutral': 28,
-                        },
-                        {
-                            'name': '百度贴吧',
-                            'total': 50,
-                            'positive': 2,
-                            'negative': 10,
-                            'neutral': 38,
-                        },
-                        {
-                            'name': '天涯论坛',
-                            'total': 60,
-                            'positive': 2,
-                            'negative': 10,
-                            'neutral': 48,
-                        },
-                    ]
-                }
-            }
-        }
-        return JsonResponse(rev_data)
+class ChannelView(APIView):
+    def post(self, request, *args, **kwargs):
+        check_and_aggregate = CheckAndAggregate()
+        rules = AggregateRule()
+        get_data = check_and_aggregate.check_format(request)
+        if isinstance(get_data, (JsonResponse, HttpResponseServerError)):
+            return get_data
+        else:
+            # 所有
+            base_aggreate = check_and_aggregate.init_aggregate_rules(get_data)
+            # 都需要先连表
+            if get_data['data']['source']['isAll'] == 1:
+                base_aggreate.append(rules.look_up_role('d2_spider_model', 'GspiderId', 'GspiderId', 'spider'))
 
-    except Exception as err:
-        print(err)
-        return HttpResponseServerError()
+            # a_aggreate 负面
+            a_aggreate = copy.deepcopy(base_aggreate)
+            # 正面
+            b_aggreate = copy.deepcopy(base_aggreate)
+
+            base_aggreate.append(rules.sort_by_count('spider.GspiderName'))
+            # print(base_aggreate)
+            base_res_list = d2ResultModel._get_collection().aggregate(base_aggreate)
+
+            a_aggreate.append(rules.equal_rule('GresultAttribute', '负面'))
+            a_aggreate.append(rules.sort_by_count('spider.GspiderName'))
+            # print(a_aggreate)
+            a_res_list = d2ResultModel._get_collection().aggregate(a_aggreate)
+
+            b_aggreate.append(rules.equal_rule('GresultAttribute', '正面'))
+            b_aggreate.append(rules.sort_by_count('spider.GspiderName'))
+            b_res_list = d2ResultModel._get_collection().aggregate(b_aggreate)
+            count = 0
+            channel = dict()
+
+            for res in base_res_list:
+                count += 1
+                key = res['_id'][0]
+
+                channel[key] = {'total': 0, 'positive': 0, 'negative': 0, 'neutral': 0}
+                channel[key]['name'] = key
+                channel[key]['total'] = res['count']
+
+            for res in a_res_list:
+                key = res['_id'][0]
+                channel[key]['negative'] = res['count']
+            for res in b_res_list:
+                key = res['_id'][0]
+                channel[key]['positive'] = res['positive']
+            channel_list = []
+            for k, v in channel.items():
+                v['neutral'] = v['total'] - v['negative'] - v['positive']
+                channel_list.append(v)
+            return JsonResponse({'code': 0, 'msg': '成功', 'data': {'count': len(channel_list), 'list': channel_list}})

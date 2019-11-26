@@ -62,11 +62,11 @@ def add_word(request):
             else:
                 new_emotional.save()
         except Exception as err:
-            print(err)
+            # print(err)
             return HttpResponseServerError()
         else:
             rev_data = {'code': 0, 'msg': "添加成功", 'data': "{}，添加成功".format(emotional_name)}
             return JsonResponse(rev_data)
     except Exception as err:
-        print(err)
+        # print(err)
         return HttpResponseServerError()

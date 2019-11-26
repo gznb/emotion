@@ -54,5 +54,5 @@ def look_words(request):
         return JsonResponse(rev_data)
 
     except Exception as err:
-        print(err)
+        # print(err)
         return HttpResponseServerError()

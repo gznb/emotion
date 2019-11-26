@@ -69,7 +69,7 @@ def ZupdateSpider(request):
             rev_data = {'code':1, 'msg': "域名冲突，域名应该唯一", 'data':{}}
             return JsonResponse(rev_data)
         except Exception as err:
-            print(err)
+            # print(err)
             return HttpResponseServerError
         else:
             rev_data = {'code': 0, 'msg': "更新成功", 'data': {}}

@@ -2,39 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4b4828de-f091-4d99-a3a2-1e93006f10b2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/d2_client/check_data/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/d2_client/check_data/check_field.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/d2_client/conf/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/d2_client/conf/code_msg.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/d2_client/conf/field_conf.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/d2_client/conf/time_conf.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/d2_client/d2Result/check_receive_format.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/d2_client/tools/filtering_char.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2Emotional/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Emotional/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2Emotional/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Emotional/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2Emotional/views/addWordView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Emotional/views/addWordView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2Emotional/views/deleteWordView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Emotional/views/deleteWordView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2Emotional/views/lookWordsView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Emotional/views/lookWordsView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2Emotional/views/updateWordView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Emotional/views/updateWordView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2Order/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Order/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2Order/views/addView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Order/views/addView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2Result/surveyViews/trendView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Result/surveyViews/trendView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2Result/surveyViews/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Result/surveyViews/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2Spider/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Spider/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2Spider/views/addSpiderView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Spider/views/addSpiderView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2Spider/views/deleteSpiderView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Spider/views/deleteSpiderView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2Spider/views/lookSpiderView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Spider/views/lookSpiderView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2Spider/views/updateSpiderView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Spider/views/updateSpiderView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2User/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2User/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2User/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2User/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2User/views/loginView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2User/views/loginView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2User/views/motifyView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2User/views/motifyView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2User/views/registerView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2User/views/registerView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/d2_client/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2_client/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/middleware/IsJsonCheck.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/middleware/IsJsonCheck.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/tools/examine.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/tools/token.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/tools/token.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/.idea/d2_client.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/.idea/vcs.xml" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -48,6 +22,7 @@
   <component name="ProjectId" id="1U0NryIgrFWN1snd3wqVcGySrab" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -72,6 +47,8 @@
       <option name="presentableId" value="Default" />
       <updated>1574489754977</updated>
       <workItem from="1574489756330" duration="4000" />
+      <workItem from="1574565401294" duration="79000" />
+      <workItem from="1574569319656" duration="1955000" />
     </task>
     <servers />
   </component>
@@ -83,7 +60,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

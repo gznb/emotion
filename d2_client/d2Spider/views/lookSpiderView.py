@@ -2,7 +2,6 @@ from django_redis import get_redis_connection
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
 import simplejson
 from d2Spider.models import d2SpiderModel
-import pprint
 from configuration import OUT_TIME
 
 def ZlookSpider(request):

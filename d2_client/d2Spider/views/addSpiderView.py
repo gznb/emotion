@@ -2,7 +2,7 @@ from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServer
 import simplejson
 from django_redis import get_redis_connection
 from d2Spider.models import d2SpiderModel
-from configuration import OUT_TIME
+
 
 def ZaddSpider(request):
 
@@ -70,7 +70,7 @@ def ZaddSpider(request):
             else:
                 newSpider.save()
         except Exception as err:
-            print(err)
+            # print(err)
             return HttpResponseServerError()
         else:
             rev_data = {'code': 0, 'msg': "添加成功", 'data': "{}，添加成功".format(ZspiderName)}
@@ -78,5 +78,5 @@ def ZaddSpider(request):
 
 
     except Exception as err:
-        print(err)
+        # print(err)
         return HttpResponseServerError()

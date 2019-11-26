@@ -46,7 +46,7 @@ def upload_action(request):
                 ).save()
                 counts += 1
         except Exception as err:
-            print(err)
+            # print(err)
             rev_data = {'code': 2, 'msg': "保存失败", 'data':""}
             return JsonResponse(rev_data)
 

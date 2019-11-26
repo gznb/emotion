@@ -32,7 +32,7 @@ def delete_word(request):
         try:
             delete_this_word.save()
         except Exception as err:
-            print(err)
+            # print(err)
             return HttpResponseServerError
         else:
             rev_data = {'code': 0, 'msg': "删除成功", 'data': {}}

@@ -1,1 +1,3 @@
 DATETIME_FORMAT_STR = '%Y-%m-%d %H:%M:%S'
+
+OUT_TIME = 6000

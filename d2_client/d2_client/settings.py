@@ -42,14 +42,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'rest_framework_mongoengine',
     'd2User',
     'd2Emotional',
     'd2Spider',
     'd2Result',
     'd2Order',
     'd2Admin',
+    'rest_framework',
+    # 'rest_framework_mongoengine',
 ]
 
 MIDDLEWARE = [
@@ -61,7 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'middleware.IsJsonCheck.ZisJsonCheckMiddleware',
+    # 'middleware.IsJsonCheck.ZisJsonCheckMiddleware',
     'middleware.authToken.ZauthTokenMiddleware',
 ]
 # 跨域问题
@@ -296,3 +296,12 @@ NOT_AUTH_URL = [
     '/user/modify/',
     '/admin/login/'
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ['my_rest_framework.MyAuth.LoginAuth', ],
+    'DEFAULT_PARSER_CLASSES': ['rest_framework.parsers.JSONParser', ],
+    'DEFAULT_RENDERER_CLASSES': [
+            'rest_framework.renderers.JSONRenderer',  # 配置只允许渲染json数据
+    ],
+    'EXCEPTION_HANDLER': 'my_rest_framework.utils.exception_handler',
+}

@@ -11,7 +11,7 @@ class d2ResultModel(mongoengine.DynamicDocument):
     GresultNowTime = mongoengine.DateTimeField()                      # 爬取时间
     GresultAttribute = mongoengine.StringField()                      # 网页属性   
     GresultReleaseTime = mongoengine.DateTimeField()                  # 网页发布时间   
-    GresultScore  = mongoengine.FloatField()                          # 评分
+    GresultScore = mongoengine.FloatField()                          # 评分
     
     GorderId = mongoengine.StringField()                              # 订单id
     GspiderId = mongoengine.IntField()                                # 爬虫id

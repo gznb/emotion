@@ -234,3 +234,20 @@ class CheckField(object):
                 return attribute
             else:
                 raise ValueError('属性必须3种属性中之一')
+
+    def is_str(self, china_str):
+        if china_str is None:
+            raise ValueError('关键字段不能为空')
+        if not isinstance(china_str, str):
+            raise TypeError('关键字段应该为字符串')
+        china_str = automatic_filtering_invisible_char(china_str)
+        return china_str
+
+    # 监测排序参数是不是  time, 或者是 score
+    def is_sort_rule(self, sort_key):
+        if not isinstance(sort_key, str):
+            raise TypeError('排序参数必须为字符串')
+        if sort_key == 'time' or sort_key == 'score':
+            return sort_key
+        else:
+            raise ValueError('排序参数目前只支持 "time" or "score"')

@@ -62,7 +62,7 @@ class AggregateRule(object):
     def re_rule(self, key, value):
         return {"$match": {key: {"$regex": value}}}
 
-    # 分页
+    # 分页 这里需要注意，返回的是一个 列表
     def skip_limit(self, skip, limit):
 
         return [
@@ -76,7 +76,7 @@ class AggregateRule(object):
 
 
     # 加入排序
-    def my_sort(self, key, vlue):
+    def my_sort(self, key, vlue=-1):
         return {'$sort': {key: vlue}}
 
     # 得到一个根据时间的分组

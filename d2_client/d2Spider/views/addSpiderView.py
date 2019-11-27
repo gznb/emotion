@@ -2,28 +2,45 @@ from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServer
 import simplejson
 from django_redis import get_redis_connection
 from d2Spider.models import d2SpiderModel
+from rest_framework.views import APIView
+
+class AddSpiderView(APIView):
+
+    def check_format(self, request):
+        spider_name = request.data.get('web_name')
+        spider_classification = request.data.get('web_classification')
+        spider_region = request.data.get('web_region')
+        spider_domain = request.data.get('source')
+
+
+
+
+    def post(self, request, *args, **kwargs):
+        pass
+
+
 
 
 def ZaddSpider(request):
 
     try:
 
-        conn = get_redis_connection()
+        # conn = get_redis_connection()
         get_data = simplejson.loads(request.body)
-        
-        Ztoken = request.META.get('HTTP_X_TOKEN')
-        # print(Ztoken)
-        if Ztoken is None:
-            rev_data = {'code': 1, 'msg': "token无效，请重新登陆", 'data': {}}
-            return JsonResponse(rev_data)
-        
-        Ztelephone = conn.get(Ztoken)
-
-        if Ztelephone is not None:
-            Ztelephone = Ztelephone.decode('UTF-8')
-        else:
-            rev_data = {'code': 1, 'msg': "token无效，请重新登陆", 'data': {}}
-            return JsonResponse(rev_data)
+        #
+        # Ztoken = request.META.get('HTTP_X_TOKEN')
+        # # print(Ztoken)
+        # if Ztoken is None:
+        #     rev_data = {'code': 1, 'msg': "token无效，请重新登陆", 'data': {}}
+        #     return JsonResponse(rev_data)
+        #
+        # Ztelephone = conn.get(Ztoken)
+        #
+        # if Ztelephone is not None:
+        #     Ztelephone = Ztelephone.decode('UTF-8')
+        # else:
+        #     rev_data = {'code': 1, 'msg': "token无效，请重新登陆", 'data': {}}
+        #     return JsonResponse(rev_data)
         
         ZspiderName = get_data.get('web_name')
         ZspiderClassification = get_data.get('web_classification')

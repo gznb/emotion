@@ -110,6 +110,7 @@ class InitView(APIView):
                 'coverCount': cover_count,
                 'source': channel,
                 'word': {
+                    'isAll': 1,
                     'count': len(word_list),
                     'list': word_list
                 },

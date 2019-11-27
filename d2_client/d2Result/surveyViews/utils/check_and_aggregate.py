@@ -1,6 +1,7 @@
 from d2Result.utils.check_get_data import CheckReceiveFormat
 from django.http import JsonResponse, HttpResponseServerError
 from pymongo_aggregate.aggregate_rule import AggregateRule
+import traceback
 import logging
 logger = logging.getLogger('django')
 
@@ -31,7 +32,8 @@ class CheckAndAggregate(object):
                     "isAll": 1,
                     "count": 2,
                     "list": ["太平洋集团", "严介和"]
-                }
+                },
+                "sort": 'time | score'
             }
         }
         :param request:
@@ -43,12 +45,15 @@ class CheckAndAggregate(object):
         this_period = data.get('thisPeriod')
         source = data.get('source')
         word = data.get('word')
+        sort_rule = data.get('sort')
         try:
             order_id = self.check.check_order_id({'orderId': order_id})
             time_interval = self.check.check_time_interval({'timeInterval': time_interval})
             begin_time, end_time = self.check.check_period(this_period, time_interval)
             s_is_all, s_count, s_list = self.check.check_source(source)
             w_is_all, w_count, w_list = self.check.check_word(word)
+            if sort_rule is not None:
+                sort_rule = self.check.check_sort_rule({'sort': sort_rule})
         except (TypeError, ValueError) as err:
             return JsonResponse({'code': 2, 'msg': str(err), 'data': {}})
         except Exception as err:
@@ -73,6 +78,8 @@ class CheckAndAggregate(object):
                 'count': s_count,
                 'list': s_list
             }
+            if sort_rule is not None:
+                data['sort'] = sort_rule
             get_data['data'] = data
             return get_data
 

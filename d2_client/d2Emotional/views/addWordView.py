@@ -2,6 +2,24 @@ from django.http import JsonResponse,  HttpResponseServerError
 import simplejson
 from django_redis import get_redis_connection
 from d2Emotional.models import d2EmotionalModel
+from rest_framework.views import APIView
+from check_data.check_field import CheckField
+
+
+class AddWordView(APIView):
+    check_field = CheckField()
+
+    def check_format(self, request):
+        emotional_name = request.data.get('keyword')
+        emotional_classification = request.data.get('classification')
+        emotional_attribute = request.data.get('attribute')
+        try:
+            emotional_attribute = self.check_field.is_attribute(emotional_attribute)
+        except Exception as err:
+            pass
+
+    def post(self, request, *args, **kwargs):
+        pass
 
 
 def add_word(request):

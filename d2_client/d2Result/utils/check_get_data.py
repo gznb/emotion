@@ -160,7 +160,7 @@ class CheckReceiveFormat(object):
             is_default = 1
         return is_default, key, value
 
-    # 正确返回time_interval
+    # 正确后返回time_interval
     def check_time_interval(self, obj):
         try:
             time_interval = self.check_file.is_time_interval(obj.get('timeInterval'))
@@ -189,6 +189,7 @@ class CheckReceiveFormat(object):
         else:
             return attribute, len(u_list), u_list
 
+    # 正确后返回 url
     def check_url(self, obj):
         try:
             url = self.check_file.is_url(obj.get('url'))
@@ -198,3 +199,14 @@ class CheckReceiveFormat(object):
             raise err
         else:
             return url
+
+    # 正确后返回 sort_rule
+    def check_sort_rule(self, obj):
+        try:
+            sort_rule = self.check_file.is_sort_rule(obj.get('sort'))
+        except (ValueError, TypeError) as err:
+            raise ValueError(err) from err
+        except Exception as err:
+            raise err
+        else:
+            return sort_rule

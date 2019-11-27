@@ -11,19 +11,30 @@ logger = logging.getLogger('django')
 class SpecificView(APIView):
 
     def post(self, request, *args, **kwargs):
-
         check_and_aggregate = CheckAndAggregate()
         rules = AggregateRule()
         get_data = check_and_aggregate.check_format(request)
         if isinstance(get_data, (JsonResponse, HttpResponseServerError)):
             return get_data
         else:
+            # print(get_data)
+            # print(get_data['data']['sort'])
+            if get_data['data'].get('sort') is None:
+                return JsonResponse({'code': 2, 'msg': '排序参数不能为空', 'data': {}})
             base_aggreate = check_and_aggregate.init_aggregate_rules(get_data)
             if get_data['data']['source']['isAll'] == 1:
                 base_aggreate.append(rules.look_up_role('d2_spider_model', 'GspiderId', 'GspiderId', 'spider'))
             base_aggreate.append(rules.equal_rule('GresultAttribute', '负面'))
             # print(base_aggreate)
+            if get_data['data'].get('sort') == 'time':
+                base_aggreate.append(rules.my_sort('GresultReleaseTime', 1))
+            else:
+                base_aggreate.append(rules.my_sort('GresultScore', 1))
+            base_aggreate = base_aggreate + rules.skip_limit(1, 10)
+            # base_aggreate.append(rules.skip_limit(1, 10))
+            # print(base_aggreate)
             base_res_list = d2ResultModel._get_collection().aggregate(base_aggreate)
+
 
             con_list = list()
             for res in base_res_list:

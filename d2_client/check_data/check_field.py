@@ -24,6 +24,7 @@ class CheckField(object):
             CheckField._instance = CheckField(*args, **kwargs)
         return CheckField._instance
 
+    # 看看是不是一个手机号码，11为，纯数字，前面是三大运营商的
     def is_telephon(self, telephone):
         """
         :param telephone：传递过来的是只包含可见字符的字符串
@@ -53,6 +54,7 @@ class CheckField(object):
                 # 手机号码应该为数字字符串
                 raise TypeError('手机号码只能是数字字符串')
 
+    # 检查是不是合法是用户名
     def is_username(self, username):
         """
         :param username: 只能是可见字符
@@ -82,6 +84,7 @@ class CheckField(object):
         else:
             return username
 
+    # 是不是 一个合法的 email
     def is_email(self, email):
         """
         邮箱检查
@@ -112,6 +115,7 @@ class CheckField(object):
             # return 143, self.code_msg['141']
         return email
 
+    # 订单编号 必须大于0
     def is_order_id(self, order_id):
         """
         检查订单id
@@ -136,6 +140,7 @@ class CheckField(object):
             # return 163, self.code_msg['163']
         return order_id
 
+    # 检查是不是合法的时间周期，必须大于1
     def is_time_interval(self, time_interval):
         """
         检查时间周期
@@ -162,6 +167,7 @@ class CheckField(object):
             # return 183, self.code_msg['183']
         return time_interval
 
+    # 检查是不是 标准的 时间字符串
     def is_time_str(self, time):
         """
         时间检查
@@ -199,6 +205,7 @@ class CheckField(object):
         else:
             return timestamp
 
+    # 是一个 数字字符串
     def is_int_str(self, int_str):
         if not isinstance(int_str, (str, int)):
             raise TypeError('类型错误')
@@ -210,7 +217,7 @@ class CheckField(object):
             else:
                 return temp
 
-
+    # 确定为一个url字符串
     def is_url(self, url):
         if not isinstance(url, str):
             raise TypeError('url类型错误')
@@ -220,7 +227,7 @@ class CheckField(object):
         else:
             return url
 
-
+    # 确定是字符串，并且只能是 中性，负面，正面
     def is_attribute(self, attribute):
         if not isinstance(attribute, str):
             raise TypeError('类型错误')
@@ -235,12 +242,15 @@ class CheckField(object):
             else:
                 raise ValueError('属性必须3种属性中之一')
 
+    # 返回一个吸收掉空格和控制符的字符串
     def is_str(self, china_str):
         if china_str is None:
             raise ValueError('关键字段不能为空')
         if not isinstance(china_str, str):
             raise TypeError('关键字段应该为字符串')
         china_str = automatic_filtering_invisible_char(china_str)
+        if len(china_str) < 1:
+            raise ValueError('非法关键字')
         return china_str
 
     # 监测排序参数是不是  time, 或者是 score

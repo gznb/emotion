@@ -20,7 +20,7 @@ class LoginView(APIView):
         telephone = request.data.get('telephone')
         pwd = request.data.get('password')
         if not telephone or not pwd:
-            return HttpResponseNotFound('账号或者密码不能为空')
+            return JsonResponse({'code': 2, 'msg': '账号或者密码不能为空', 'data': {}})
         if telephone == pwd:
             rev_data = {'code': 2, 'msg': "请修改初始密码，不修改将无法使用", 'data': {}}
             return JsonResponse(rev_data)

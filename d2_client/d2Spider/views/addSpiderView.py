@@ -1,99 +1,75 @@
-from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
+from django.http import JsonResponse, HttpResponseServerError
 import simplejson
-from django_redis import get_redis_connection
 from d2Spider.models import d2SpiderModel
 from rest_framework.views import APIView
+from check_data.check_field import CheckField
+import logging
+logger = logging.getLogger('django')
+
 
 class AddSpiderView(APIView):
+
+    def __init__(self):
+        self.check_field = CheckField()
+        super().__init__()
 
     def check_format(self, request):
         spider_name = request.data.get('web_name')
         spider_classification = request.data.get('web_classification')
         spider_region = request.data.get('web_region')
         spider_domain = request.data.get('source')
-
-
-
-
-    def post(self, request, *args, **kwargs):
-        pass
-
-
-
-
-def ZaddSpider(request):
-
-    try:
-
-        # conn = get_redis_connection()
-        get_data = simplejson.loads(request.body)
-        #
-        # Ztoken = request.META.get('HTTP_X_TOKEN')
-        # # print(Ztoken)
-        # if Ztoken is None:
-        #     rev_data = {'code': 1, 'msg': "token无效，请重新登陆", 'data': {}}
-        #     return JsonResponse(rev_data)
-        #
-        # Ztelephone = conn.get(Ztoken)
-        #
-        # if Ztelephone is not None:
-        #     Ztelephone = Ztelephone.decode('UTF-8')
-        # else:
-        #     rev_data = {'code': 1, 'msg': "token无效，请重新登陆", 'data': {}}
-        #     return JsonResponse(rev_data)
-        
-        ZspiderName = get_data.get('web_name')
-        ZspiderClassification = get_data.get('web_classification')
-        ZspiderRegion = get_data.get('web_region')
-        ZspiderDomain = get_data.get('source')
-
-
-        if ZspiderName is None or ZspiderClassification is None or ZspiderRegion is None or ZspiderDomain is None:
-            rev_data = {'code':1, 'msg': "缺少关键信息", 'data':{}}
-            return JsonResponse(rev_data)
-        
-        # 排除空格
-        ZspiderName = "".join(ZspiderName.split())
-        ZspiderClassification = "".join(ZspiderClassification.split())
-        ZspiderRegion = "".join(ZspiderRegion.split())
-        ZspiderDomain = "".join(ZspiderDomain.split())
-
-        if len(ZspiderName) < 1 or len(ZspiderClassification) < 1 or len(ZspiderRegion) < 1 or len(ZspiderDomain) < 1:
-                rev_data = {'code':1, 'msg': "缺少关键信息", 'data':{}}
-                return JsonResponse(rev_data)
-        # 查看是否重复
-
-        temp = d2SpiderModel.objects(GspiderDomain=ZspiderDomain).first()
-        
-
-        if temp is not None and temp['GspiderDeleted'] == 0:
-            rev_data = {'code': 1, 'msg': "此网站已经存在", "data":{}}
-            return JsonResponse(rev_data)
-
-        if temp is not None and temp['GspiderDeleted'] == 1:
-            temp['GspiderDeleted'] = 0
-
-        
-        newSpider = d2SpiderModel(
-            GspiderId = d2SpiderModel.objects.count(),
-            GspiderName = ZspiderName,
-            GspiderClassification = ZspiderClassification,
-            GspiderRegion = ZspiderRegion,
-            GspiderDomain = ZspiderDomain 
-        )
         try:
-            if temp is not None:
-                temp.save()
-            else:
-                newSpider.save()
+            spider_name = self.check_field.is_str(spider_name)
+            spider_classification = self.check_field.is_str(spider_classification)
+            spider_region = self.check_field.is_str(spider_region)
+            spider_domain = self.check_field.is_url(spider_domain)
+        except (ValueError, TypeError) as err:
+            return JsonResponse({'code': 2, 'msg': str(err), 'data':{}})
         except Exception as err:
-            # print(err)
+            logger.error(err)
             return HttpResponseServerError()
         else:
-            rev_data = {'code': 0, 'msg': "添加成功", 'data': "{}，添加成功".format(ZspiderName)}
-            return JsonResponse(rev_data)
+            return {
+                'web_name': spider_name,
+                'web_classification': spider_classification,
+                'web_region': spider_region,
+                'source': spider_domain
+            }
 
+    def post(self, request, *args, **kwargs):
+        get_data = self.check_format(request)
+        if isinstance(get_data, (JsonResponse, HttpResponseServerError)):
+            return get_data
+        else:
+            spider_name = get_data.get('web_name')
+            spider_classification = get_data.get('web_classification')
+            spider_region = get_data.get('web_region')
+            spider_domain = get_data.get('source')
 
-    except Exception as err:
-        # print(err)
-        return HttpResponseServerError()
+            temp = d2SpiderModel.objects(GspiderDomain=spider_domain).first()
+
+            if temp is not None and temp['GspiderDeleted'] == 0:
+                rev_data = {'code': 1, 'msg': "此网站已经存在", "data": {}}
+                return JsonResponse(rev_data)
+
+            if temp is not None and temp['GspiderDeleted'] == 1:
+                temp['GspiderDeleted'] = 0
+
+            new_spider = d2SpiderModel(
+                GspiderId=d2SpiderModel.objects.count(),
+                GspiderName=spider_name,
+                GspiderClassification=spider_classification,
+                GspiderRegion=spider_region,
+                GspiderDomain=spider_domain
+            )
+            try:
+                if temp is not None:
+                    temp.save()
+                else:
+                    new_spider.save()
+            except Exception as err:
+                logger.error(err)
+                return HttpResponseServerError()
+            else:
+                rev_data = {'code': 0, 'msg': "添加成功", 'data': "{}，添加成功".format(spider_name)}
+                return JsonResponse(rev_data)

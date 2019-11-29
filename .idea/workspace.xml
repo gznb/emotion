@@ -2,13 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4b4828de-f091-4d99-a3a2-1e93006f10b2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/.idea/d2_client.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/d2_client/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/check_data/check_field.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/check_data/check_field.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/d2Admin/views/ZloginViews.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Admin/views/ZloginViews.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/d2Emotional/views/addWordView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Emotional/views/addWordView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/d2Emotional/views/deleteWordView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Emotional/views/deleteWordView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/d2Emotional/views/lookWordsView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Emotional/views/lookWordsView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/d2Emotional/views/updateWordView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Emotional/views/updateWordView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/d2Emotional/views/uploadActionView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Emotional/views/uploadActionView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/d2Order/views/addView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Order/views/addView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/d2Order/views/deleteView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Order/views/deleteView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/d2Order/views/findView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Order/views/findView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/d2Order/views/updateView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Order/views/updateView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/d2Spider/views/addSpiderView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Spider/views/addSpiderView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/d2Spider/views/deleteSpiderView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Spider/views/deleteSpiderView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/d2Spider/views/updateSpiderView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2Spider/views/updateSpiderView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/d2User/views/motifyView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2User/views/motifyView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/d2_client/d2User/views/registerView.py" beforeDir="false" afterPath="$PROJECT_DIR$/d2_client/d2User/views/registerView.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -49,6 +58,7 @@
       <workItem from="1574489756330" duration="4000" />
       <workItem from="1574565401294" duration="79000" />
       <workItem from="1574569319656" duration="1955000" />
+      <workItem from="1574926123674" duration="60000" />
     </task>
     <servers />
   </component>

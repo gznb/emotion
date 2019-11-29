@@ -2,39 +2,45 @@ from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServer
 import simplejson
 from django_redis import get_redis_connection
 from d2Spider.models import d2SpiderModel
+from rest_framework.views import APIView
+from check_data.check_field import CheckField
 
-def ZdeleteSpider(request):
-    
-    try:
+import logging
+logger = logging.getLogger('django')
 
-        conn = get_redis_connection()
-        get_data = simplejson.loads(request.body)
-        
-        Ztoken = request.META.get('HTTP_X_TOKEN')
-        # print(Ztoken)
-        if Ztoken is None:
-            rev_data = {'code': 1, 'msg': "token无效，请重新登陆", 'data': {}}
-            return JsonResponse(rev_data)
-        
-        Ztelephone = conn.get(Ztoken)
+class DeleteSpiderView(APIView):
 
-        if Ztelephone is not None:
-            Ztelephone = Ztelephone.decode('UTF-8')
-        else:
-            rev_data = {'code': 1, 'msg': "token无效，请重新登陆", 'data': {}}
-            return JsonResponse(rev_data)
+    def __init__(self):
+        self.check_field = CheckField()
+        super().__init__()
 
-        ZspiderId = get_data.get('number')
-        deleteSpider = d2SpiderModel.objects(GspiderId=ZspiderId).first()
-        deleteSpider['GspiderDeleted'] = 1
+    def check_format(self, request):
+        order_id = request.data.get('number')
         try:
-            deleteSpider.save()
+            order_id = self.check_field.is_order_id(order_id)
+        except (TypeError, ValueError) as err:
+            return JsonResponse({'code':2, 'msg': str(err), 'data': {}})
         except Exception as err:
-            # print(err)
+            logger.error(err)
             return HttpResponseServerError
         else:
-            rev_data = {'code': 0, 'msg': "删除成功", 'data': {}}
-            return JsonResponse(rev_data)
+            return {
+                'number': order_id
+            }
 
-    except Exception as err:
-        return HttpResponseServerError()
+    def post(self, request, *args, **kwargs):
+        get_data = self.check_format(request)
+        if isinstance(get_data, (JsonResponse, HttpResponseServerError)):
+            return get_data
+        else:
+            order_id = get_data.get('number')
+            delete_spider = d2SpiderModel.objects(GspiderId=order_id).first()
+            delete_spider['GspiderDeleted'] = 1
+            try:
+                delete_spider.save()
+            except Exception as err:
+                logger.error(err)
+                return HttpResponseServerError()
+            else:
+                rev_data = {'code': 0, 'msg': "删除成功", 'data': {}}
+                return JsonResponse(rev_data)

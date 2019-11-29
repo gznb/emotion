@@ -30,7 +30,7 @@ SECRET_KEY = 'xvy@hch$l=zi36$f6azc)_02lgpyitgtdb=q+46=*_r39z=mv_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*',]
+ALLOWED_HOSTS = ['*', ]
 
 
 # Application definition
@@ -228,6 +228,7 @@ CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
         'LOCATION': 'redis://139.9.186.222:6379/1',
+        # 'LOCATION': 'redis://127.0.0.1:6379',
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "PASSWORD": "qwer1234",
@@ -286,6 +287,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 try:
+    # connect(db='publication', alias='default', host='127.0.0.1', port=27017)
     connect(db='publication', alias='default', host='139.9.186.222', port=27017, username='gznb', password='qwer1234')
 except Exception as err:
     logging.error(err)

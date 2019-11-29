@@ -1,79 +1,80 @@
-from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
-import simplejson
-from django_redis import get_redis_connection
+from django.http import JsonResponse,  HttpResponseServerError
 from d2Spider.models import d2SpiderModel
-from configuration import OUT_TIME
+from rest_framework.views import APIView
 from mongoengine.errors import NotUniqueError
-def ZupdateSpider(request):
-    
-    try:
+from check_data.check_field import CheckField
+import logging
+logger = logging.getLogger('django')
 
 
-        conn = get_redis_connection()
-        get_data = simplejson.loads(request.body)
-        
-        Ztoken = request.META.get('HTTP_X_TOKEN')
-        # print(Ztoken)
-        if Ztoken is None:
-            rev_data = {'code': 1, 'msg': "token无效，请重新登陆", 'data': {}}
-            return JsonResponse(rev_data)
-        
-        Ztelephone = conn.get(Ztoken)
+class UpdateSpiderView(APIView):
+    def __init__(self):
+        self.check_field = CheckField()
+        super().__init__()
 
-        if Ztelephone is not None:
-            Ztelephone = Ztelephone.decode('UTF-8')
+    def check_format(self, request):
+        spider_id = request.data.get('number')
+        spider_name = request.data.get('web_name')
+        spider_region = request.data.get('web_region')
+        spider_classification = request.data.get('web_classification')
+        spider_domain = request.data.get('source')
+        try:
+            spider_id = self.check_field.is_int_str(spider_id)
+            spider_name = self.check_field.is_str(spider_name)
+            spider_region = self.check_field.is_str(spider_region)
+            spider_classification = self.check_field.is_str(spider_classification)
+            spider_domain = self.check_field.is_url(spider_domain)
+        except (TypeError, ValueError) as err:
+            return JsonResponse({'code':2, 'msg': str(err), 'data':{}})
+        except Exception as err:
+            logger.error(err)
+            return HttpResponseServerError()
         else:
-            rev_data = {'code': 1, 'msg': "token无效，请重新登陆", 'data': {}}
-            return JsonResponse(rev_data)
+            return {
+                'number' : spider_id,
+                'web_name': spider_name,
+                'web_region': spider_region,
+                'web_classification': spider_classification,
+                'source': spider_domain
+            }
 
-        ZspiderId = get_data.get('number')
-        ZspiderName = get_data.get('web_name')
-        ZspiderRegion = get_data.get('web_region')
-        ZspiderClassification = get_data.get('web_classification')
-        ZspiderDomain = get_data.get('source')
-        if ZspiderName is None or ZspiderDomain is None or ZspiderClassification is None or ZspiderRegion is None:
-            rev_data = {'code':1, 'msg': "缺少关键信息", 'data':{}}
-            return JsonResponse(rev_data)
+    def post(self, request, *args, **kwargs):
+        get_data = self.check_format(request)
+        if isinstance(get_data, (JsonResponse, HttpResponseServerError)):
+            return get_data
+        else:
+            spider_id = get_data.get('number')
+            spider_name = get_data.get('web_name')
+            spider_region = get_data.get('web_region')
+            spider_classification = get_data.get('web_classification')
+            spider_domain = get_data.get('source')
 
-            # 排除空格
-        ZspiderName = "".join(ZspiderName.split(' '))
-        ZspiderRegion = "".join(ZspiderRegion.split(' '))
-        ZspiderClassification = "".join(ZspiderClassification.split(' '))
-        ZspiderDomain = "".join(ZspiderDomain.split(' '))
+            updateSpider = d2SpiderModel.objects(GspiderId=spider_id).first()
 
-        if len(ZspiderName) < 1 or len(ZspiderRegion) < 1 or len(ZspiderClassification) < 1 or len(ZspiderDomain) < 1:
-                rev_data = {'code':1, 'msg': "缺少关键信息", 'data':{}}
+            if updateSpider is None:
+                rev_data = {'code': 1, 'msg': "更新失败", 'data': "改词不存在，或者已经被删除"}
                 return JsonResponse(rev_data)
 
-        updateSpider = d2SpiderModel.objects(GspiderId=ZspiderId).first()
+            if spider_name is not None:
+                updateSpider['GspiderName'] = spider_name
 
-        if updateSpider is None:
-            rev_data = {'code': 1, 'msg': "更新失败", 'data': "改词不存在，或者已经被删除"}
-            return JsonResponse(rev_data)
+            if spider_region is not None:
+                updateSpider['GspiderRegion'] = spider_region
 
-        if ZspiderName is not None:
-            updateSpider['GspiderName'] = ZspiderName
-        
-        if ZspiderRegion is not None:
-            updateSpider['GspiderRegion'] = ZspiderRegion
+            if spider_classification is not None:
+                updateSpider['GspiderClassification'] = spider_classification
 
-        if ZspiderClassification is not None:
-            updateSpider['GspiderClassification'] = ZspiderClassification
+            if spider_domain is not None:
+                updateSpider['GspiderDomain'] = spider_domain
 
-        if ZspiderDomain is not None:
-            updateSpider['GspiderDomain'] = ZspiderDomain
-
-        try:
-            updateSpider.save()
-        except NotUniqueError as err:
-            rev_data = {'code':1, 'msg': "域名冲突，域名应该唯一", 'data':{}}
-            return JsonResponse(rev_data)
-        except Exception as err:
-            # print(err)
-            return HttpResponseServerError
-        else:
-            rev_data = {'code': 0, 'msg': "更新成功", 'data': {}}
-            return JsonResponse(rev_data)
-
-    except Exception as err:
-        return HttpResponseServerError()
+            try:
+                updateSpider.save()
+            except NotUniqueError as err:
+                rev_data = {'code': 1, 'msg': "域名冲突，域名应该唯一", 'data': {}}
+                return JsonResponse(rev_data)
+            except Exception as err:
+                logger.error(err)
+                return HttpResponseServerError
+            else:
+                rev_data = {'code': 0, 'msg': "更新成功", 'data': {}}
+                return JsonResponse(rev_data)

@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import ZloginViews
+from d2Admin.views.ZloginViews import LoginView
+
 urlpatterns = [
-    path('login/', ZloginViews.Zlogin),
+    path('login/', LoginView.as_view())
 ]

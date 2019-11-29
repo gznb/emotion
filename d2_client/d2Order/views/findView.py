@@ -1,34 +1,55 @@
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
+from rest_framework.views import APIView
+from check_data.check_field import CheckField
+from d2Order.models import d2OrderModel
 
-def ZfindAll(request):
-    try:
+import logging
+logger = logging.getLogger('django')
 
-        rev_data = {
-            "code": 0,
-            "msg": "查看成功",
-            "data": { 
-                "count": 1,     	# 订单数量
-                "list": [			# 具体详情
-                    {
-                        "orderId": 0,	# 订单 id
-                        "name": "XXXX",	# 订单名
-                        "word": {		# 检测词
-                            "count": 2, # 检测词数量
-                            "list": [	# 检测词
-                                "你好",
-                                "没钱"
-                            ]
-                        },
-                        "negative": {    # 自定义敏感词，  现在不用
-                            "count": 0,  # 词个数
-                            "list": []   # 那些词
-                        }
-                    }
-                ]
+
+class FindAllOrderView(APIView):
+
+    def __init__(self):
+        self.check_field = CheckField()
+        super().__init__()
+
+    def check_format(self, request):
+        telephone = request.data.get('telephone')
+        try:
+            telephone = self.check_field.is_telephon(telephone)
+        except (TypeError, ValueError) as err:
+            return JsonResponse({'code': 2, 'msg': str(err), 'data': {}})
+        except Exception as err:
+            logger.error(err)
+            return HttpResponseServerError()
+        else:
+            return {
+                'telephone': telephone
             }
-        }
-        return JsonResponse(rev_data)
 
-    except Exception as err:
-        # print(err)
-        return HttpResponseServerError()
+    def post(self, request, *args, **kwargs):
+        get_data = self.check_format(request)
+        if isinstance(get_data, (JsonResponse, HttpResponseServerError)):
+            return get_data
+        else:
+            telephone = get_data.get('telephone')
+            order_list = d2OrderModel.objects(GuserTelephone=telephone)
+            rev_order_list = list()
+            # print(order_list)
+            for order in order_list:
+
+                d = {
+                    'orderId': order.GorderId,
+                    'name': order.GorderName,
+                    'word': {
+                        'count': len(order.GorderKeywordList),
+                        'list': order.GorderKeywordList
+                    },
+                    'negative': {
+                        'count': len(order.GorderNegativeList),
+                        'list': order.GorderNegativeList
+                    }
+                }
+                rev_order_list.append(d)
+            return JsonResponse({'code': 0, 'msg': '成功', 'data': {'count':len(rev_order_list), 'list':rev_order_list}})
+

@@ -11,8 +11,12 @@ logger = logging.getLogger('django')
 
 
 class InitView(APIView):
-    mainsource = {'name': 'X', 'count': 0}
-    negative_counts = 0
+
+    def __init__(self):
+        self.mainsource = {'name': 'X', 'count': 0}
+        self.negative_counts = 0
+        super().__init__()
+
     def get_channel(self, order_id):
         res_list = d2ResultModel._get_collection().aggregate([
             {

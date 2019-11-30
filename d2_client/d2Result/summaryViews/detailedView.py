@@ -7,10 +7,15 @@ from conf.field_conf import SEARCH_DICT
 import logging
 logger = logging.getLogger('django')
 
+
 class DetailedView(APIView):
-    aggregate_rules = []
-    p_pos = 1
-    p_count = 1
+
+    def __init__(self):
+        self.aggregate_rules = []
+        self.p_pos = 1
+        self.p_count = 1
+        super().__init__()
+
     # 检查格式并整合查询语句
     def check_format(self, request):
         order_id = request.data.get('orderId')

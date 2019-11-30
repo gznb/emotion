@@ -8,10 +8,15 @@ import logging
 import copy
 logger = logging.getLogger('django')
 
+
 class TrendView(APIView):
-    aggregate_rules = []
-    data_table = list()
-    rules = AggregateRule()
+
+    def __init__(self):
+        self.aggregate_rules = []
+        self.data_table = list()
+        self.rules = AggregateRule()
+        super().__init__()
+
     # 初始化时间周期表中的 time
     def init_time_table(self, time_interval, old_time):
         data_table = list()

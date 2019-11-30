@@ -25,9 +25,9 @@ class CheckReceiveFormat(object):
         try:
             order_id = self.check_file.is_order_id(obj.get('orderId'))
         except TypeError as err:
-            raise TypeError(err)
+            raise TypeError(err) from err
         except ValueError as err:
-            raise ValueError(err)
+            raise ValueError(err) from err
         except Exception as err:
             raise err
         else:
@@ -49,7 +49,7 @@ class CheckReceiveFormat(object):
             begin_time = self.check_file.is_time_str(obj.get('beginTime'))
             end_time = self.check_file.is_time_str(obj.get('endTime'))
         except (TypeError, ValueError) as err:
-            raise err
+            raise err from err
         except Exception as err:
             raise err
         # 如果开始时间和结束时间大小不一，会被自动转化为指定的大小
@@ -166,9 +166,9 @@ class CheckReceiveFormat(object):
         try:
             time_interval = self.check_file.is_time_interval(obj.get('timeInterval'))
         except TypeError as err:
-            raise TypeError(err)
+            raise TypeError(err) from err
         except ValueError as err:
-            raise ValueError(err)
+            raise ValueError(err) from err
         except Exception as err:
             raise err
         else:
@@ -184,7 +184,7 @@ class CheckReceiveFormat(object):
                 url = self.check_file.is_url(url)
                 u_list.append(url)
         except (TypeError, ValueError) as err:
-            raise err
+            raise err from err
         except Exception as err:
             raise err
         else:
@@ -195,7 +195,7 @@ class CheckReceiveFormat(object):
         try:
             url = self.check_file.is_url(obj.get('url'))
         except (TypeError, ValueError) as err:
-            raise err
+            raise err from err
         except Exception as err:
             raise err
         else:

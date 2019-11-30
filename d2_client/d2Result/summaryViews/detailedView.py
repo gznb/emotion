@@ -25,8 +25,8 @@ class DetailedView(APIView):
         word = data.get('word')
         page = data.get('page')
         search = data.get('search')
+        attribute = data.get('attribute')
         check = CheckReceiveFormat()
-
         try:
             order_id = check.check_order_id({'orderId': order_id})
 
@@ -40,6 +40,7 @@ class DetailedView(APIView):
             self.p_pos = p_pos
             self.p_count = p_count
             is_default, key, value = check.check_search(search)
+            attribute_is_default, attribute_value = check.check_attribute_search(attribute)
         except (TypeError, ValueError) as err:
             return JsonResponse({'code': 2, 'msg': str(err), 'data': {}})
         except Exception as err:
@@ -48,6 +49,11 @@ class DetailedView(APIView):
         else:
             rules = AggregateRule()
             self.aggregate_rules.append(rules.equal_rule('GorderId', order_id))
+            # 将属性判断加在前面
+            if attribute_is_default != 1:
+                # print(attribute_value)
+                # print(111)
+                self.aggregate_rules.append(rules.equal_rule("GresultAttribute", attribute_value))
             self.aggregate_rules.append(rules.time_interval_rule('GresultReleaseTime', begin_time, end_time))
             if w_is_all != 1:
                 self.aggregate_rules.append(rules.list_in_rule('GresultKeyword', w_list))

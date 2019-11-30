@@ -5,6 +5,7 @@ import datetime
 import logging
 logger = logging.getLogger('django')
 
+
 class CheckReceiveFormat(object):
 
     def __init__(self):
@@ -210,3 +211,21 @@ class CheckReceiveFormat(object):
             raise err
         else:
             return sort_rule
+
+    # 正确后返回 is_default, attribute
+    def check_attribute_search(self, obj):
+        if not isinstance(obj, dict):
+            raise TypeError('关键参数缺失')
+        is_default = obj.get('isDefault')
+        if is_default == 1:
+            return is_default, ""
+        elif is_default == 0:
+            value = obj.get('value')
+            try:
+                attribute = self.check_file.is_attribute(value)
+            except (TypeError, ValueError) as err:
+                raise ValueError(err) from err
+            else:
+                return is_default, attribute
+        else:
+            raise ValueError('参数中含有非法值')

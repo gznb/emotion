@@ -1,11 +1,11 @@
 from django.urls import path
-from d2Result.surveyViews import initializationView, channelView, inclinationView, sourceDistributionView, specificView, trendView
 from d2Result.surveyViews.initializationView import InitView
 from d2Result.surveyViews.trendView import TrendView
 from d2Result.surveyViews.inclinationView import InclinaView
 from d2Result.surveyViews.sourceDistributionView import SourceDistributeView
 from d2Result.surveyViews.channelView import ChannelView
 from d2Result.surveyViews.specificView import SpecificView
+
 urlpatterns = [
     path('initialization/', InitView.as_view()),
     # path('initialization/', initializationView.Zinitialization),

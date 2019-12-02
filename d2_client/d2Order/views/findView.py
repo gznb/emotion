@@ -33,7 +33,7 @@ class FindAllOrderView(APIView):
             return get_data
         else:
             telephone = get_data.get('telephone')
-            order_list = d2OrderModel.objects(GuserTelephone=telephone)
+            order_list = d2OrderModel.objects(GuserTelephone=telephone, GorderDeleted=0)
             rev_order_list = list()
             # print(order_list)
             for order in order_list:

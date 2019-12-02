@@ -44,7 +44,7 @@ class UpdateView(APIView):
             url_list = get_data['data']['result']['list']
             attribute = get_data['data']['result']['attribute']
             try:
-                count = d2ResultModel.objects(GresultRealUrl__in=url_list).update(GresultAttribute=attribute)
+                count = d2ResultModel.objects(GresultRealUrl__in=url_list, GresultDeleted=0).update(GresultAttribute=attribute)
             except Exception as err:
                 logger.error(err)
                 return HttpResponseServerError()

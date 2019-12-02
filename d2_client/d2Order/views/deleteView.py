@@ -41,7 +41,9 @@ class DeleteOrderView(APIView):
             telephone = get_data.get('telephone')
             order_id = get_data.get('orderId')
             try:
-                d2OrderModel.objects(GuserTelephone=telephone, GorderId=order_id).update(GorderDeleted=1)
+                d2OrderModel.objects(GuserTelephone=telephone,
+                                     GorderDeleted=0,
+                                     GorderId=order_id).update(GorderDeleted=1)
             except Exception as err:
                 logger.error(err)
                 return HttpResponseServerError()

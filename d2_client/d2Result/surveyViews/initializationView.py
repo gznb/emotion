@@ -59,6 +59,9 @@ class InitView(APIView):
                 "$match": {"GresultAttribute": "负面"}
             },
             {
+                "$match": {"GresultDeleted": 0}
+            },
+            {
                 '$lookup': {
                     'from': "d2_spider_model",
                     'localField': "GspiderId",

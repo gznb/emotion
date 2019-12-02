@@ -112,6 +112,7 @@ class CheckAndAggregate(object):
         aggregate_rules = []
         order_id = get_data['orderId']
         aggregate_rules.append(self.rules.equal_rule('GorderId', order_id))
+        aggregate_rules.append(self.rules.equal_rule('GresultDeleted', 0))
         data = get_data['data']
         begin_time = data['thisPeriod']['beginTime']
         end_time = data['thisPeriod']['endTime']

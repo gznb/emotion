@@ -43,7 +43,9 @@ class DeletedView(APIView):
             order_id = get_data.get('orderId')
             url_list = get_data.get('urls')
             try:
-                count = d2ResultModel.objects(GorderId = order_id, GresultRealUrl__in=url_list).update(GresultDeleted=1)
+                count = d2ResultModel.objects(GorderId=order_id,
+                                              GresultDeleted=0,
+                                              GresultRealUrl__in=url_list).update(GresultDeleted=1)
             except Exception as err:
                 logger.error(err)
                 return HttpResponseServerError()

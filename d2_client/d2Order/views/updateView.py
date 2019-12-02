@@ -78,7 +78,7 @@ class UpdateOrderView(APIView):
                     if word:
                         word_list = word.get('list')
                         if word_list:
-                            old_order_list = d2OrderModel.objects(GuserTelephone=telephone)
+                            old_order_list = d2OrderModel.objects(GuserTelephone=telephone, GorderDeleted=0)
                             for old_order in old_order_list:
                                 old_word_list = old_order.GorderKeywordList
                                 flag = [False for c in word_list if c not in old_word_list]

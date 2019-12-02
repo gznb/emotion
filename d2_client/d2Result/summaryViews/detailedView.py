@@ -49,6 +49,7 @@ class DetailedView(APIView):
         else:
             rules = AggregateRule()
             self.aggregate_rules.append(rules.equal_rule('GorderId', order_id))
+            self.aggregate_rules.append(rules.equal_rule('GresultDeleted', 0))
             # 将属性判断加在前面
             if attribute_is_default != 1:
                 # print(attribute_value)

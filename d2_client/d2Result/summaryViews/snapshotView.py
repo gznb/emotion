@@ -33,7 +33,9 @@ class SnapshotView(APIView):
         if isinstance(get_data, (HttpResponseServerError, JsonResponse)):
             return get_data
         else:
-            res = d2ResultModel.objects(GorderId=get_data['orderId'], GresultRealUrl=get_data['url']).first()
+            res = d2ResultModel.objects(GorderId=get_data['orderId'],
+                                        GresultRealUrl=get_data['url'],
+                                        GresultDeleted=0).first()
             if res is None:
                 return JsonResponse({'code': 0, 'msg': '该订单下url快照不存在', 'data':{}})
             else:

@@ -4,6 +4,7 @@ from d2Result.summaryViews.detailedView import DetailedView
 from d2Result.summaryViews.updateView import UpdateView
 from d2Result.summaryViews.snapshotView import SnapshotView
 from d2Result.summaryViews.exportView import ExportView
+from d2Result.summaryViews.deleteView import DeletedView
 
 urlpatterns = [
     path('initialization/', IniTializationView.as_view()),
@@ -11,4 +12,6 @@ urlpatterns = [
     path('update/', UpdateView.as_view()),
     path('snapshot/', SnapshotView.as_view()),
     path('export/', ExportView.as_view()),
+    path('deleted/', DeletedView.as_view())
+
 ]

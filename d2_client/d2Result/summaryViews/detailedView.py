@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from pymongo_aggregate.aggregate_rule import AggregateRule
 from d2Result.models import d2ResultModel
 from conf.field_conf import SEARCH_DICT
+import copy
 import logging
 logger = logging.getLogger('django')
 
@@ -14,6 +15,7 @@ class DetailedView(APIView):
         self.aggregate_rules = []
         self.p_pos = 1
         self.p_count = 1
+        self.counts = 0
         super().__init__()
 
     # 检查格式并整合查询语句
@@ -61,7 +63,6 @@ class DetailedView(APIView):
             self.aggregate_rules.append(rules.look_up_role('d2_spider_model','GspiderId', 'GspiderId', 'spider'))
             if s_is_all != 1:
                 self.aggregate_rules.append(rules.list_in_rule('spider.GspiderClassification', s_list))
-            self.aggregate_rules = self.aggregate_rules + rules.skip_limit(p_pos, p_count)
             # print(is_default)
             if is_default != 1:
                 if '渠道' in key:
@@ -70,6 +71,15 @@ class DetailedView(APIView):
                     # print(key)
                     key = SEARCH_DICT[key]
                 self.aggregate_rules.append(rules.re_rule(key, value))
+            # 得到总数
+            count_aggregate_rules = copy.deepcopy(self.aggregate_rules)
+            count_aggregate_rules.append(rules.sort_by_count('GresultId'))
+            # print(count_aggregate_rules)
+            for res in d2ResultModel._get_collection().aggregate(count_aggregate_rules):
+                self.counts = res['count']
+            # print(self.counts)
+            self.aggregate_rules = self.aggregate_rules + rules.skip_limit(p_pos, p_count)
+            # print(self.aggregate_rules)
 
     def get_rev_data(self, res_list):
         rev_data = {'code': 0, 'msg': '成功','data': {'page': {'position':self.p_pos, 'count': self.p_count}}}
@@ -91,6 +101,7 @@ class DetailedView(APIView):
         # rev_data['page']['count'] = min(rev_data['page']['count'], total)
         rev_data['data']['total'] = total
         rev_data['data']['list'] = result_list
+        rev_data['data']['sums'] = self.counts
         return rev_data
 
     def post(self, request, *args, **kwargs):

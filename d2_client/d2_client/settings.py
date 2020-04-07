@@ -231,7 +231,7 @@ CACHES = {
         # 'LOCATION': 'redis://127.0.0.1:6379',
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "PASSWORD": "qwer1234",
+            "PASSWORD": "int2147483647*",
         },
     },
 }
@@ -288,7 +288,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 try:
     # connect(db='publication', alias='default', host='127.0.0.1', port=27017)
-    connect(db='publication', alias='default', host='139.9.186.222', port=27017, username='gznb', password='qwer1234')
+    connect(db='publication', alias='default', host='139.9.186.222', port=27017, username='zsf123', password='zsf123456')
 except Exception as err:
     logging.error(err)
 

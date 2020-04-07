@@ -39,6 +39,7 @@ class InitView(APIView):
         ])
         count = 0
         c_list = []
+
         for res in res_list:
             count += 1
             c_list.append(res['_id'][0])
@@ -84,6 +85,7 @@ class InitView(APIView):
 
     def post(self, request, *args, **kwargs):
         # 得到渠道数
+        # print(request.data)
         order_id = request.data.get('orderId')
         check = CheckReceiveFormat()
         try:
@@ -91,10 +93,12 @@ class InitView(APIView):
         except (TypeError, ValueError) as err:
             return JsonResponse({'code': 0, 'msg': str(err), 'data': {}})
         except Exception as err:
+            # print(err)
             logger.error(err)
             return HttpResponseServerError()
+        # print(order_id)`
         channel = self.get_channel(order_id)
-        # print(channel)
+
         cover_count = self.get_source(order_id)
         # print(self.mainsource)
         # print(cover_count)
